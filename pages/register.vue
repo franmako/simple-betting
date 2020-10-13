@@ -41,9 +41,9 @@
           <div class="text-center pt-12 pb-12">
             <p>
               Already have an account?
-              <a href="register.html" class="underline font-semibold"
-                >Log in.</a
-              >
+              <nuxt-link class="underline font-semibold" to="/login">
+                Log in.
+              </nuxt-link>
             </p>
           </div>
         </div>
@@ -72,12 +72,13 @@ export default {
   methods: {
     async createUser() {
       try {
-        await this.$fireAuth.createUserWithEmailAndPassword(
-          this.email,
-          this.password
-        );
+        await this.$fireAuth
+          .createUserWithEmailAndPassword(this.email, this.password)
+          .then(() => {
+            this.$router.push("/login");
+          });
       } catch (e) {
-        console.log(e);
+        this.$toast.error(e.message);
       }
     },
   },
