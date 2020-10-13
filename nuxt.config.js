@@ -52,17 +52,22 @@ export default {
 
   firebase: {
     config: {
-      apiKey: '<apiKey>',
-      authDomain: '<authDomain>',
-      databaseURL: '<databaseURL>',
-      projectId: '<projectId>',
-      storageBucket: '<storageBucket>',
-      messagingSenderId: '<messagingSenderId>',
-      appId: '<appId>',
-      measurementId: '<measurementId>'
+      apiKey: process.env.FIREBASE_APIKEY,
+      authDomain: process.env.FIREBASE_AUTHDOMAIN,
+      databaseURL: process.env.FIREBASE_DBURL,
+      projectId: process.env.FIREBASE_PROJECTID,
+      storageBucket: process.env.FIREBASE_STORAGEBUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDERID,
+      appId: process.env.FIREBASE_APPID,
+      measurementId: process.env.FIREBASE_MEASUREMENTID
     },
     services: {
-      auth: true // Just as example. Can be any other service.
+      auth: true,
+      firestore: true
     }
+  },
+
+  firestore: {
+    enablePersistence: true
   }
 }
