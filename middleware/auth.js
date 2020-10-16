@@ -1,6 +1,6 @@
-export default function ({ store, redirect }) {
+export default function ({ redirect, $fireAuth }) {
   // If the user is not authenticated
-  if (!store.state.auth.user) {
+  if (!$fireAuth.currentUser) {
     return redirect("/login");
   }
 }
