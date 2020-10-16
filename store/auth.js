@@ -1,21 +1,21 @@
 export const state = () => ({
-  user: "",
+  user: null,
 });
 
 export const mutations = {
-  ON_AUTH_STATE_CHANGED_MUTATION: (state, { authUser }) => {
-    const { uid, email, emailVerified } = authUser;
-    state.user = { uid, email, emailVerified };
+  set_user(store, data) {
+    store.user = data;
+  },
+  reset_user(store) {
+    store.user = null;
   },
 };
 
-export const actions = {
-  onAuthStateChangedAction: (ctx, { authUser }) => {
-    if (!authUser) {
-      // claims = null
-      // Perform logout operations
-    } else {
-      // Do something with the authUser and the claims object...
-    }
+/* export const actions = {
+  login({ commit }, data) {
+    return api.auth.login(data).then((response) => {
+      commit("set_user", response.data.user);
+      return response;
+    });
   },
-};
+}; */
