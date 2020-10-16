@@ -3,11 +3,11 @@ export const state = () => ({
 });
 
 export const mutations = {
-  set_user(store, data) {
-    store.user = data;
+  setUser(state, data) {
+    state.user = data;
   },
-  reset_user(store) {
-    store.user = null;
+  resetUser(state) {
+    state.user = null;
   },
 };
 

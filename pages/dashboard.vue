@@ -218,7 +218,7 @@ export default {
   components: {
     Aside,
   },
-  //middleware: "auth",
   layout: "authenticated",
+  middleware: "auth",
 };
 </script>

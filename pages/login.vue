@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "Login",
   data() {
@@ -70,11 +72,19 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      setUser: "auth/setUser",
+    }),
     async login() {
       try {
         await this.$fireAuth
           .signInWithEmailAndPassword(this.email, this.password)
-          .then(() => {
+          .then((res) => {
+            this.setUser({
+              id: res.user.uid,
+              email: res.user.email,
+              displayName: res.user.displayName,
+            });
             this.$router.push("/dashboard");
           });
       } catch (e) {
