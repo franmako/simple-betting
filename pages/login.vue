@@ -74,7 +74,16 @@ export default {
       try {
         await this.$fireAuth
           .signInWithEmailAndPassword(this.email, this.password)
-          .then(() => {
+          .then((res) => {
+            //Save user data in state
+            this.setUser({
+              id: res.user.uid,
+              email: res.user.email,
+              emailVerified: res.user.emailVerified,
+              displayName: res.user.displayName,
+              photoUrl: res.user.photoUrl,
+            });
+            //Redirect to dashboard
             this.$router.push("/dashboard");
           });
       } catch (e) {

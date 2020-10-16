@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "Register",
   data() {
@@ -70,12 +72,33 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      setUser: "auth/setUser",
+    }),
     async createUser() {
       try {
         await this.$fireAuth
           .createUserWithEmailAndPassword(this.email, this.password)
-          .then(() => {
-            this.$router.push("/login");
+          .then((res) => {
+            //Save user data in state
+            this.setUser({
+              id: res.user.uid,
+              email: res.user.email,
+              emailVerified: res.user.emailVerified,
+              displayName: res.user.displayName,
+              photoUrl: res.user.photoUrl,
+            });
+            //Send verification email after succesful register
+            this.$fireAuth.currentUser
+              .sendEmailVerification()
+              .then(() => {
+                this.$toast.success("Please verify you email adresss.");
+              })
+              .catch((error) => {
+                this.$toast.error(error.message);
+              });
+            //Redirect to dashboard
+            this.$router.push("/dashboard");
           });
       } catch (e) {
         this.$toast.error(e.message);
