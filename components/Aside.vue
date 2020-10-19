@@ -53,7 +53,9 @@
     </div>
 
     <span class="mt-4 text-gray-600">Credits</span>
-    <span class="mt-1 text-3xl font-semibold">$ 1,579.20</span>
+    <span v-if="user" class="mt-1 text-3xl font-semibold"
+      >$ {{ user.credits }}</span
+    >
 
     <button
       class="mt-8 flex items-center py-4 px-3 text-white rounded-lg bg-green-400 shadow focus:outline-none"
@@ -154,3 +156,16 @@
     </div>
   </aside>
 </template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+  name: "Aside",
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+    }),
+  },
+};
+</script>

@@ -5,7 +5,7 @@
     >
       <div class="flex flex-col capitalize text-3xl">
         <span class="font-semibold">hello,</span>
-        <span>Francis!</span>
+        <span v-if="user">{{ user.displayName }}!</span>
       </div>
       <div class="flex">
         <div
@@ -211,6 +211,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Aside from "../components/Aside";
 
 export default {
@@ -220,5 +221,10 @@ export default {
   },
   layout: "authenticated",
   middleware: "auth",
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+    }),
+  },
 };
 </script>
