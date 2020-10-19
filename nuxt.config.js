@@ -59,23 +59,14 @@ export default {
     },
     services: {
       auth: true,
-      firestore: true,
-    },
-  },
-
-  firestore: {
-    enablePersistence: true,
-  },
-
-  auth: {
-    initialize: {
-      onAuthStateChangedMutation: "ON_AUTH_STATE_CHANGED_MUTATION",
-      onAuthStateChangedAction: "onAuthStateChangedAction",
+      firestore: {
+        enablePersistence: true,
+      },
     },
   },
 
   toast: {
     position: "top-center",
     duration: 6000,
-  }
+  },
 };

@@ -3,6 +3,16 @@
     <p class="text-center text-3xl">Create an account.</p>
     <form class="flex flex-col pt-3 md:pt-8" @submit.prevent="createUser">
       <div class="flex flex-col pt-4">
+        <label for="email" class="text-lg">Name</label>
+        <input
+          id="name"
+          v-model="name"
+          type="text"
+          placeholder="John"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="flex flex-col pt-4">
         <label for="email" class="text-lg">Email</label>
         <input
           id="email"
@@ -47,6 +57,7 @@ export default {
   layout: "loginregister",
   data() {
     return {
+      name: "",
       email: "",
       password: "",
     };
@@ -56,30 +67,46 @@ export default {
       setUser: "auth/setUser",
     }),
     async createUser() {
+      let startingCredits = 1000;
       try {
         await this.$fireAuth
           .createUserWithEmailAndPassword(this.email, this.password)
-          .then((res) => {
-            //Save user data in state
-            this.setUser({
-              id: res.user.uid,
-              email: res.user.email,
-              emailVerified: res.user.emailVerified,
-              displayName: res.user.displayName,
-              photoUrl: res.user.photoUrl,
+          .then(() => {
+            console.log(this.$fireAuth.currentUser.uid);
+            //Add user credits
+            this.$fireStore.collection("users-extra").add({
+              credits: startingCredits,
+              user: this.$fireAuth.currentUser.uid,
+              roles: ["user"],
             });
+
             //Send verification email after succesful register
             this.$fireAuth.currentUser
               .sendEmailVerification()
               .then(() => {
-                this.$toast.success("Please verify you email adresss.");
+                this.$toast.info(
+                  "Account created! Please verify you email adresss."
+                );
               })
-              .catch((error) => {
-                this.$toast.error(error.message);
+              .catch((sendEmailError) => {
+                this.$toast.error(sendEmailError.message);
               });
-            //Redirect to dashboard
-            this.$router.push("/dashboard");
+            this.$fireAuth.currentUser
+              .updateProfile({
+                displayName: this.name,
+              })
+              .catch(function (updateError) {
+                this.$toast.error(updateError.message);
+              });
           });
+
+        this.$fireAuth.signOut().catch(function (error) {
+          // An error happened.
+          this.$toast.error(error.message);
+        });
+
+        //Redirect to dashboard
+        this.$router.push("/login");
       } catch (e) {
         this.$toast.error(e.message);
       }

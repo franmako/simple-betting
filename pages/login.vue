@@ -45,6 +45,7 @@ import { mapMutations } from "vuex";
 export default {
   name: "Login",
   layout: "loginregister",
+  //middleware: "anonymous",
   data() {
     return {
       email: "",
@@ -60,14 +61,27 @@ export default {
         await this.$fireAuth
           .signInWithEmailAndPassword(this.email, this.password)
           .then((res) => {
-            //Save user data in state
-            this.setUser({
-              id: res.user.uid,
-              email: res.user.email,
-              emailVerified: res.user.emailVerified,
-              displayName: res.user.displayName,
-              photoUrl: res.user.photoUrl,
-            });
+            let extra = {};
+            this.$fireStore
+              .collection("users-extra")
+              .where("user", "==", res.user.uid)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach(function (doc) {
+                  // doc.data() is never undefined for query doc snapshots
+                  extra = doc.data();
+                });
+
+                //Save user data in state
+                this.setUser({
+                  id: res.user.uid,
+                  email: res.user.email,
+                  emailVerified: res.user.emailVerified,
+                  displayName: res.user.displayName,
+                  photoUrl: res.user.photoUrl,
+                  credits: extra.credits,
+                });
+              });
             //Redirect to dashboard
             this.$router.push("/dashboard");
           });
